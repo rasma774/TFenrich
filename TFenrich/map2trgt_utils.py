@@ -60,7 +60,7 @@ def trrust_genes(TFs, weighted=True):
     return target_genes
 
 
-def correlation_genes(TFs, multiple_testing_correct=True):
+def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
     # TODO :  add several cut-offs at the correlation level, no good way of
     # doing this
     """
@@ -91,9 +91,19 @@ def correlation_genes(TFs, multiple_testing_correct=True):
     print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of TRRUST TFs were in the TF list')
   
     
-    # Since the self-correlation is one, we need to remove the input TFs from the set
-    corr = corr.iloc[:, ~corr.columns.isin(TFs)]
-    
-    target_genes = corr[in_TFs].abs().sum()
+    # Since the self-correlation is one, we need to remove the input TFs from 
+    # the set
+    corr_out = corr.iloc[:, ~corr.columns.isin(TFs)]
+    target_genes = corr_out[in_TFs].abs().sum()
 
-    return target_genes
+    if not multiple_testing_correct:
+        return target_genes
+    
+    cval_dist = []
+    for i in range(100):
+        randtfs = np.random.choice(corr.index, size=(in_corr.sum()), replace=False)
+        ctmp = corr.iloc[:, ~corr.columns.isin(randtfs)][corr.index.isin(randtfs)].abs().sum()
+        cval_dist.append(np.sort(ctmp)[int(len(ctmp)*thresh)])
+    
+    target_genes_adj = target_genes[target_genes >= np.median(cval_dist)]
+    return target_genes_adj

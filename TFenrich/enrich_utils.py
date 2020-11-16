@@ -44,7 +44,7 @@ def _calc_fisher(gene_lists, genes_tmp):
         A = np.in1d(gene_lists[hallmark], genes_tmp).sum()
         B = len(gene_lists[hallmark]) - A
         C = len(genes_tmp) - A
-        D = 25861 - (A + B + C)
+        D = 26408 - (A + B + C)
 
         OR[hallmark], p[hallmark] = sts.fisher_exact([[A, B], [C, D]], alternative='greater')
     res = pd.DataFrame([OR, p]).transpose()
@@ -52,7 +52,7 @@ def _calc_fisher(gene_lists, genes_tmp):
     return res
 
 
-def set_enrichments(gene_set, db='KEGG', FDR=0.05):
+def set_enrichments(gene_set, db='KEGG', FDR=0.05, ):
     """
     
 
@@ -73,10 +73,10 @@ def set_enrichments(gene_set, db='KEGG', FDR=0.05):
     """
     
     gene_lists = _sortsets(db)    
-    res = _calc_fisher(gene_lists, gene_set)
+    res = _calc_fisher(gene_lists, gene_set.index)
     
     index_sort = np.argsort(res.p)
-    res.iloc[index_sort, :]
+    res = res.iloc[index_sort, :]
     
     res['FDR'] = benjaminihochberg_correction(res.p, FDR=FDR)
     return res
