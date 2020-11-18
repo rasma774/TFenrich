@@ -22,22 +22,6 @@ __contact__ = 'rasma774@gmail.com'
 # TODO: move out all obstructing functions
 # TODO: Add GWAS comparison!
 
-def _map_tfs(TFs):
-    """
-    
-
-    Parameters
-    ----------
-    TFs : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    None.
-
-    """
-    None
-
     
 class TFenrich:
     def __init__(self, TFs, mapmethod='deep'):

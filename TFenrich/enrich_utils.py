@@ -9,8 +9,9 @@ Created on Wed Nov 11 13:26:33 2020
 import numpy as np
 import scipy.stats as sts
 import pandas as pd
-import rpy2
+
 from sklearn.metrics import roc_auc_score
+
 
 from stat_utils import benjaminihochberg_correction
 
@@ -119,6 +120,30 @@ def GWAS(rankings, ismember, ngenes_thresh=100):
     return res
         
 def enrichr(genes):
+    import rpy2.robjects.packages as rpackages
+    from rpy2.robjects.packages import importr
+    #import rpy2
+    from rpy2 import robjects as robj
+    utils = importr('utils')
+    if not rpackages.isinstalled("org.Hs.eg.db"):
+        utils.install_packages("org.Hs.eg.db")
+        
+    if not rpackages.isinstalled("clusterProfiler"):
+        utils.install_packages("clusterProfiler")
+    importr("clusterProfiler")
+    import rpy2.robjects as robjects
+    go = topGO.runTest()
+    
+    robjects.r['']
+    topGO.
+    
+    names_to_install = [x for x in packnames if not rpackages.isinstalled(x)]
+
+    #human importr(org.Hs.eg.db)
+
+
+    clusterProfiler
     
     clusterProfiler, DOSE,
     
+

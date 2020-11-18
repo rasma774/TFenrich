@@ -46,7 +46,8 @@ def trrust_genes(TFs, weighted=True):
     in_TFs = TRRUST.iloc[:, 0].isin(TFs)
     in_TRRUST = np.in1d(TFs, TRRUST[0].values)
 
-    print(str(100*np.sum(~in_TRRUST)/len(in_TRRUST)) + '% of TFs are not in TRRUST')
+    # TODO: fix small print bug eblow
+    #print(str(100*np.sum(~in_TRRUST)/len(in_TRRUST)) + '% of TFs are not in TRRUST')
     print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of TRRUST TFs were in the TF list')
     
     target_genes = TRRUST[in_TFs][1].values
