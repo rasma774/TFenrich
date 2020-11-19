@@ -32,15 +32,15 @@ def _sortsets(db):
     f.close()
     return gene_lists
 
-def _calc_fisher(gene_lists, genes_tmp):
+def _calc_fisher(gene_lists, genes_tmp, ngenes_thresh=10):
       
     # TODO: we really need to do some good selection for D!!!
     # First, we need to calculate D
     tmp = []
     [tmp.append(gene_lists[x]) for x in gene_lists.keys()]
-    tmp.append(gene_lists)
+    tmp.append(genes_tmp)
     flat_list = np.array([item for sublist in tmp for item in sublist])
-
+    nunique = np.unique(flat_list).shape
 
     
     # Fisher exact test
@@ -54,10 +54,12 @@ def _calc_fisher(gene_lists, genes_tmp):
     OR = {}
     p = {}
     for hallmark in gene_lists:
+        if len(gene_lists[hallmark]) < ngenes_thresh:
+               continue
         A = np.in1d(gene_lists[hallmark], genes_tmp).sum()
         B = len(gene_lists[hallmark]) - A
         C = len(genes_tmp) - A
-        D = len(flat_list) - (A + B + C)
+        D = nunique  - (A + B + C)
 
         OR[hallmark], p[hallmark] = sts.fisher_exact([[A, B], [C, D]], alternative='greater')
     res = pd.DataFrame([OR, p]).transpose()
@@ -89,6 +91,8 @@ def set_enrichments(gene_set, db='KEGG', FDR=0.05, ):
         gene_lists = pd.read_pickle('../data/pickles/go_terms.p')
     elif db.upper() == 'ALL':
         assert False
+    elif db.upper() == 'GWAS':
+        gene_lists = pd.read_pickle('../data/pickles/gwas.p')
     else:
         # TODO: make this to a pickle too, and add 'ALL' as option for both
         gene_lists = _sortsets(db)
