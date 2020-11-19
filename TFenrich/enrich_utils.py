@@ -98,7 +98,7 @@ def set_enrichments(gene_set, db='KEGG', FDR=0.05, ):
         gene_lists = _sortsets(db)
         
         
-    res = _calc_fisher(gene_lists, gene_set.index)
+    res = _calc_fisher(gene_lists, gene_set)
     
     index_sort = np.argsort(res.p)
     res = res.iloc[index_sort, :]

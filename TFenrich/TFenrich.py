@@ -51,7 +51,7 @@ class TFenrich:
         """
         self.mapmethod = mapmethod
         if self.mapmethod == 'corr':
-            self.target_genes = map2trgt_utils.correlation_genes(TFs)
+            self.target_genes = map2trgt_utils.correlation_genes(TFs).index
         elif self.mapmethod == 'TRRUST':
             self.target_genes = map2trgt_utils.trrust_genes(TFs)
         else:
