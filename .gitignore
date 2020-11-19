@@ -1,4 +1,4 @@
 data/*
-!data/pickles
+!data/pickles/go_terms.p
 docs/
 TFenrich/__pycache__
