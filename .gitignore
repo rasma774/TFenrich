@@ -1,3 +1,4 @@
-data/
+data/*
+!data/pickles
 docs/
 TFenrich/__pycache__

@@ -19,19 +19,31 @@ __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
+# TODO: need to take decision on having pickles or creating dictionaries every time
 def _sortsets(db):
+    # TODO: add tests that db is in ['KEGG', 'REACTOME', 'ALL']
     gene_lists = {}
     f = open('../data/gene_annotations/gene_annot/c2.all.v7.1.symbols.gmt')
     for line in f:
         line = line.replace('\n', '').split('\t')
-        if line[0][:len(db)] == db:
+        if (line[0][:len(db)] == db) or (db.upper() =='ALL'):
             genes = np.array(line[2:])
             gene_lists[line[0]] = genes
     f.close()
     return gene_lists
 
 def _calc_fisher(gene_lists, genes_tmp):
-      # Fisher exact test
+      
+    # TODO: we really need to do some good selection for D!!!
+    # First, we need to calculate D
+    tmp = []
+    [tmp.append(gene_lists[x]) for x in gene_lists.keys()]
+    tmp.append(gene_lists)
+    flat_list = np.array([item for sublist in tmp for item in sublist])
+
+
+    
+    # Fisher exact test
     #               | in disease genes | not disease gene
     #----------------------------------------------------
     # in light up   |         A        |        B
@@ -45,7 +57,7 @@ def _calc_fisher(gene_lists, genes_tmp):
         A = np.in1d(gene_lists[hallmark], genes_tmp).sum()
         B = len(gene_lists[hallmark]) - A
         C = len(genes_tmp) - A
-        D = 26408 - (A + B + C)
+        D = len(flat_list) - (A + B + C)
 
         OR[hallmark], p[hallmark] = sts.fisher_exact([[A, B], [C, D]], alternative='greater')
     res = pd.DataFrame([OR, p]).transpose()
@@ -63,7 +75,7 @@ def set_enrichments(gene_set, db='KEGG', FDR=0.05, ):
         DESCRIPTION.
     db : str
         suggestions include, but are not limited to
-        {'REACTOME', 'KEGG', 'BIOCARTA', 'PID', 'ALL'}. The default is KEGG
+        {'REACTOME', 'KEGG', 'BIOCARTA', 'PID', 'GO, 'ALL'}. The default is KEGG
     FDR : float, optional
         False discovey rate acc BenjaminiHochberg. 0 < FDR < 1. The default is 0.05.
     
@@ -73,7 +85,15 @@ def set_enrichments(gene_set, db='KEGG', FDR=0.05, ):
 
     """
     
-    gene_lists = _sortsets(db)    
+    if db == 'GO':
+        gene_lists = pd.read_pickle('../data/pickles/go_terms.p')
+    elif db.upper() == 'ALL':
+        assert False
+    else:
+        # TODO: make this to a pickle too, and add 'ALL' as option for both
+        gene_lists = _sortsets(db)
+        
+        
     res = _calc_fisher(gene_lists, gene_set.index)
     
     index_sort = np.argsort(res.p)
@@ -118,32 +138,34 @@ def GWAS(rankings, ismember, ngenes_thresh=100):
         res[disease] = [FE, p]
     res = pd.DataFrame(res).transpose()
     return res
-        
-def enrichr(genes):
-    import rpy2.robjects.packages as rpackages
-    from rpy2.robjects.packages import importr
-    #import rpy2
-    from rpy2 import robjects as robj
-    utils = importr('utils')
-    if not rpackages.isinstalled("org.Hs.eg.db"):
-        utils.install_packages("org.Hs.eg.db")
-        
-    if not rpackages.isinstalled("clusterProfiler"):
-        utils.install_packages("clusterProfiler")
-    importr("clusterProfiler")
-    import rpy2.robjects as robjects
-    go = topGO.runTest()
-    
-    robjects.r['']
-    topGO.
-    
-    names_to_install = [x for x in packnames if not rpackages.isinstalled(x)]
-
-    #human importr(org.Hs.eg.db)
-
-
-    clusterProfiler
-    
-    clusterProfiler, DOSE,
-    
+# =============================================================================
+#         
+# def enrichr(genes):
+#     import rpy2.robjects.packages as rpackages
+#     from rpy2.robjects.packages import importr
+#     #import rpy2
+#     from rpy2 import robjects as robj
+#     utils = importr('utils')
+#     if not rpackages.isinstalled("org.Hs.eg.db"):
+#         utils.install_packages("org.Hs.eg.db")
+#         
+#     if not rpackages.isinstalled("clusterProfiler"):
+#         utils.install_packages("clusterProfiler")
+#     importr("clusterProfiler")
+#     import rpy2.robjects as robjects
+#     go = topGO.runTest()
+#     
+#     robjects.r['']
+#     topGO.
+#     
+#     names_to_install = [x for x in packnames if not rpackages.isinstalled(x)]
+# 
+#     #human importr(org.Hs.eg.db)
+# 
+# 
+#     clusterProfiler
+#     
+#     clusterProfiler, DOSE,
+#     
+# =============================================================================
 
