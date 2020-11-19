@@ -62,8 +62,6 @@ def trrust_genes(TFs, weighted=True):
 
 
 def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
-    # TODO :  add several cut-offs at the correlation level, no good way of
-    # doing this
     """
     
 
@@ -78,10 +76,8 @@ def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
 
     """
     print('loading corr')
-    corr = pd.read_csv(
-        '../data/gene_correlations/correlations.csv', 
-        index_col=0,
-        )
+    corr = pd.read_pickle('../data/pickles/correlations.p')
+    corr = corr.set_index(corr.columns[0])
     print('Done')
 
 
@@ -89,7 +85,7 @@ def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
     in_corr = np.in1d(TFs, corr.index)
 
     print(str(100*np.sum(~in_corr)/len(in_corr)) + '% of TFs are not found')
-    print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of TRRUST TFs were in the TF list')
+    print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of correlation table TFs were in the TF list')
   
     
     # Since the self-correlation is one, we need to remove the input TFs from 
