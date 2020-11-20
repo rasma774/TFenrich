@@ -19,10 +19,6 @@ __contact__ = 'rasma774@gmail.com'
 
 # TODO: add deep approach?
 
-# TODO: move out all obstructing functions
-# TODO: Add GWAS comparison!
-
-    
 class TFenrich:
     def __init__(self, TFs, mapmethod='deep'):
         """

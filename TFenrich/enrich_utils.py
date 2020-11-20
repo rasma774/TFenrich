@@ -19,7 +19,6 @@ __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
-# TODO: need to take decision on having pickles or creating dictionaries every time
 def _sortsets(db):
     # TODO: add tests that db is in ['KEGG', 'REACTOME', 'ALL']
     gene_lists = {}

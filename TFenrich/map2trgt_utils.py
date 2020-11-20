@@ -15,7 +15,7 @@ __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
-def trrust_genes(TFs, weighted=True):
+def trrust_genes(TFs, weighted=False):
     # TODO: add something that corrects for genes that map to multiple TFs in input
     print('WARNING: should add something that has to do with number of times each target gene is used')
     """
@@ -42,15 +42,16 @@ def trrust_genes(TFs, weighted=True):
     
     # As of now, we dont use the direction or publications
     TRRUST = TRRUST.iloc[:, :2]
+    
+    
+    in_TFs = np.in1d(TRRUST[0].unique(), TFs)
+    in_TRRUST = np.in1d(TFs, TRRUST[0].unique())
 
-    in_TFs = TRRUST.iloc[:, 0].isin(TFs)
-    in_TRRUST = np.in1d(TFs, TRRUST[0].values)
 
-    # TODO: fix small print bug eblow
-    #print(str(100*np.sum(~in_TRRUST)/len(in_TRRUST)) + '% of TFs are not in TRRUST')
+    print(str(100*np.sum(~in_TRRUST)/len(in_TRRUST)) + '% of TFs are not in TRRUST')
     print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of TRRUST TFs were in the TF list')
     
-    target_genes = TRRUST[in_TFs][1].values
+    target_genes = TRRUST[TRRUST[0].isin(TFs)][1].values
     unique_targets, counts = np.unique(target_genes, return_counts=True)
     
     if ~weighted:
@@ -58,7 +59,7 @@ def trrust_genes(TFs, weighted=True):
     
     targets = pd.DataFrame((unique_targets, counts)).transpose()
     targets = targets.set_index(targets.columns[0]).iloc[:, 0]
-    return target_genes
+    return targets
 
 
 def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
