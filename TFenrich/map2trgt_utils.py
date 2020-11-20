@@ -98,10 +98,56 @@ def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
         return target_genes
     
     cval_dist = []
-    for i in range(100):
+    for _ in range(100):
         randtfs = np.random.choice(corr.index, size=(in_corr.sum()), replace=False)
         ctmp = corr.iloc[:, ~corr.columns.isin(randtfs)][corr.index.isin(randtfs)].abs().sum()
         cval_dist.append(np.sort(ctmp)[int(len(ctmp)*thresh)])
     
     target_genes_adj = target_genes[target_genes >= np.median(cval_dist)]
     return target_genes_adj
+
+
+def STRING_ppi(TFs, multiple_testing_correct=True, thresh=0.95):
+    """
+    
+
+    Parameters
+    ----------
+    TFs : TYPE
+        DESCRIPTION.
+    multiple_testing_correct : TYPE, optional
+        DESCRIPTION. The default is True.
+    thresh : TYPE, optional
+        DESCRIPTION. The default is 0.95.
+
+    Returns
+    -------
+    None.
+
+    """
+    
+    print('loading STRING PPI...')
+    ppi = pd.read_pickle('../data/pickles/string_links.p')
+    print('Done')    
+    
+    in_TFs = np.in1d(ppi.index.unique(), TFs)
+    in_STRINGdb = np.in1d(TFs, ppi.index.unique())
+
+    print(str(100*np.sum(~in_STRINGdb)/len(in_STRINGdb)) + '% of TFs are not in STRINGdb')
+    print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of STRINGdb TFs were in the TF list')
+    
+    summed_score = ppi[ppi.index.isin(TFs)].groupby('target_SYMBOL')['combined_score'].sum()
+
+    # TODO: Here, I really should be doing a statistical test if the combined
+    #       score of each gene is outside the 95% interval of the random dist
+    #       Assume central limit theorem?
+    #       Add zeros of all genes not found in the randomisation!
+    #       Estimate using a T-test? 
+    N=100
+    if multiple_testing_correct:
+        unique_string_tfs = ppi.index.unique()
+        random_weights = []
+        for _ in range(N):
+            TFrand = np.random.choice(unique_string_tfs, size=in_STRINGdb.sum(), replace=False)
+            random_weights.append(ppi[ppi.index.isin(TFrand)].groupby('target_SYMBOL')['combined_score'].sum())
+    background = pd.concat(random_weights).groupby('target_SYMBOL').sum()/N
