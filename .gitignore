@@ -1,5 +1,2 @@
-data/*
-!data/pickles/go_terms.p
-!data/pickles/gwas.p
 docs/
 TFenrich/__pycache__
