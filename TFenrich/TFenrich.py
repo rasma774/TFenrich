@@ -5,11 +5,10 @@ Created on Wed Nov 11 11:30:20 2020
 
 @author: rasmus
 
-To do: add docstrings when we see that everything works
+# TODO: add docstrings when we see that everything works
 
 """
 
-import plot_utils
 import enrich_utils
 import map2trgt_utils
 
@@ -18,7 +17,10 @@ __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
 # TODO: add deep approach?
+# TODO: we need some way to handle rankings, and not just boolean in/not in list
+#       in the enrichment calculations.
 
+    
 class TFenrich:
     def __init__(self, TFs, mapmethod='deep'):
         """
@@ -58,6 +60,9 @@ class TFenrich:
         
         res = enrich_utils.set_enrichments(self.target_genes, db=db, FDR=FDR)
         self.pathway_enrichments = res
+    
+    # TODO: Add some plotting function here!
+    #   Suggestion: dotplot?
     
         
     

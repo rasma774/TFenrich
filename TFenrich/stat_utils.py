@@ -42,3 +42,20 @@ def benjaminihochberg_correction(p, FDR=0.05):
     else:
         return p < 0
     
+
+def _stringdb_bootstrap(summed_score, ppi, nTFs, FDR=0.05, N=100):
+    unique_string_tfs = ppi.index.unique()
+    for _ in range(N ):
+        TFrand = np.random.choice(unique_string_tfs, size=nTFs, replace=False)
+        random = ppi[ppi.index.isin(TFrand)].groupby('target_SYMBOL')['combined_score'].sum()
+        summed_score[_] = random
+
+    # Nan here just means not found, so should be 0
+    summed_score[np.isnan(summed_score)] = 0
+    
+    means = summed_score.iloc[:, 1:].mean(1)
+    stds = summed_score.iloc[:, 1:].std(1)
+    Z = (means - summed_score.combined_score)/stds
+    p = sts.norm.cdf(Z)
+    is_sign = benjaminihochberg_correction(p, FDR=FDR)
+    return is_sign

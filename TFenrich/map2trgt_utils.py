@@ -105,9 +105,9 @@ def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
     
     target_genes_adj = target_genes[target_genes >= np.median(cval_dist)]
     return target_genes_adj
+    
 
-
-def STRING_ppi(TFs, multiple_testing_correct=True, thresh=0.95):
+def STRING_ppi(TFs, FDR=0.95, Npermut=100):
     """
     
 
@@ -137,17 +137,23 @@ def STRING_ppi(TFs, multiple_testing_correct=True, thresh=0.95):
     print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of STRINGdb TFs were in the TF list')
     
     summed_score = ppi[ppi.index.isin(TFs)].groupby('target_SYMBOL')['combined_score'].sum()
+    summed_score = pd.DataFrame(summed_score)
 
-    # TODO: Here, I really should be doing a statistical test if the combined
-    #       score of each gene is outside the 95% interval of the random dist
-    #       Assume central limit theorem?
-    #       Add zeros of all genes not found in the randomisation!
-    #       Estimate using a T-test? 
-    N=100
-    if multiple_testing_correct:
-        unique_string_tfs = ppi.index.unique()
-        random_weights = []
-        for _ in range(N):
-            TFrand = np.random.choice(unique_string_tfs, size=in_STRINGdb.sum(), replace=False)
-            random_weights.append(ppi[ppi.index.isin(TFrand)].groupby('target_SYMBOL')['combined_score'].sum())
-    background = pd.concat(random_weights).groupby('target_SYMBOL').sum()/N
+
+    # TODO: The test here is not stringent at all. The more TFs, the more power,
+    # and the more targets we get. Tested random 400 TFs, got 6500 significant genes.
+    # But may be reasonable... ~25% of all possible TFs gave ~25% of all genes. 
+    
+    if FDR == -1:
+        return summed_score
+    else:    
+        BH_sign = stat_utils._stringdb_bootstrap(summed_score.copy(), # to know what our gene scores are
+                                                 ppi, # to get random gene scores
+                                                 in_STRINGdb.sum(), # to know how many random TFs to draw
+                                                 FDR=FDR, 
+                                                 N=Npermut, # number of permutations
+                                                 )
+        return summed_score[BH_sign]
+    
+    
+        
