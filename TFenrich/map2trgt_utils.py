@@ -62,7 +62,7 @@ def trrust_genes(TFs, weighted=False):
     return targets
 
 
-def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
+def correlation_genes(TFs, thresh=0.95):
     """
     
 
@@ -94,7 +94,7 @@ def correlation_genes(TFs, multiple_testing_correct=True, thresh=0.95):
     corr_out = corr.iloc[:, ~corr.columns.isin(TFs)]
     target_genes = corr_out[in_TFs].abs().sum()
 
-    if not multiple_testing_correct:
+    if thresh == -1:
         return target_genes
     
     cval_dist = []

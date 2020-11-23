@@ -52,6 +52,8 @@ class TFenrich:
             self.target_genes = map2trgt_utils.correlation_genes(TFs).index
         elif self.mapmethod == 'TRRUST':
             self.target_genes = map2trgt_utils.trrust_genes(TFs)
+        elif self.mapmethod == 'PPI':
+            self.target_genes = map2trgt_utils.STRING_ppi(TFs)
         else:
             raise ValueError('mapmethod \'' + self.mapmethod + '\' not defined')
             
