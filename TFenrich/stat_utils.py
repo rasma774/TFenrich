@@ -42,6 +42,30 @@ def benjaminihochberg_correction(p, FDR=0.05):
     else:
         return p < 0
     
+def bonferroni_correction(p):
+    """
+    Bonferroni correction for multiple testing. Takes in a vector of p-values
+    and returns true where p_i < alpha_corrected, where alpha_corrected = 0.05/N
+    and N = number of independent tests. 
+
+    Parameters
+    ----------
+    p : list or numpy array
+        Probabilities of independent statistical tests stored in a vector. 
+
+    Returns
+    -------
+    bonferroni_correction : numpy array
+        A boolean vector of same shape as p where True indicates that the test
+        passed a bonferroni correction.
+    
+    See Also
+    --------
+    stat_utils.benjaminihochberg_correction : often less stringent test correction
+
+    """
+    return np.array(p) < (0.05/len(p))
+    
 
 def _stringdb_bootstrap(summed_score, ppi, nTFs, FDR=0.05, N=100):
     unique_string_tfs = ppi.index.unique()

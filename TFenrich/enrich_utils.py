@@ -66,7 +66,7 @@ def _calc_fisher(gene_lists, genes_tmp, ngenes_thresh=10):
     return res
 
 
-def set_enrichments(gene_set, db='KEGG', FDR=0.05, ):
+def set_enrichments(gene_set, mult_test_corr=None, db='KEGG', FDR=0.05, ):
     """
     
 
@@ -102,45 +102,11 @@ def set_enrichments(gene_set, db='KEGG', FDR=0.05, ):
     index_sort = np.argsort(res.p)
     res = res.iloc[index_sort, :]
     
-    res['FDR'] = benjaminihochberg_correction(res.p, FDR=FDR)
+    if not mult_test_corr is None:
+            res['FDR'] = mult_test_corr(res.p, FDR=FDR)
     return res
 
-def GWAS(rankings, ismember, ngenes_thresh=100):
-    """
-    
 
-    Parameters
-    ----------
-    rankings : TYPE
-        DESCRIPTION.
-    ismember : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    None.
-
-    """
-    print('loading GWAS...')
-    gwas = pd.read_csv(
-        '../data/gwas/gwas.csv', 
-        index_col=0,
-        )
-    print('Done')
-    unique_dis, numb = np.unique(gwas.index, return_counts=True)
-    unique_dis = unique_dis[numb >= ngenes_thresh]
-    gwas = gwas.loc[unique_dis]
-
-
-    rankings = rankings.copy()[rankings.index.isin(gwas.values.T[0])]    
-    res ={}
-    for disease in np.unique(gwas.index):
-        isin = rankings.index.isin(gwas.loc[disease].values.T[0])
-        p = sts.mannwhitneyu(rankings[isin].values, rankings[~isin].values)[-1]
-        FE = rankings[isin].values.mean()/rankings[~isin].values.mean()
-        res[disease] = [FE, p]
-    res = pd.DataFrame(res).transpose()
-    return res
 # =============================================================================
 #         
 # def enrichr(genes):

@@ -11,18 +11,24 @@ Created on Wed Nov 11 11:30:20 2020
 
 import enrich_utils
 import map2trgt_utils
+import stat_utils
 
 __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
-# TODO: add deep approach?
+# TODO: add deep approach? I dont know, might be bad since we want small models?
+# Actually, the 250-250 model is only 80 MB, 100-100 only 35 MB. We could use pickle
+#   to avoid unneeded dependencies 
 # TODO: we need some way to handle rankings, and not just boolean in/not in list
 #       in the enrichment calculations.
+# TODO: we need to find some good way to get less genes from STRINGdb 
 
-    
 class TFenrich:
-    def __init__(self, TFs, mapmethod='deep'):
+    def __init__(self, 
+                 TFs, 
+                 mapmethod='deep', 
+                 multiple_testing_correction='BenjaminiHochberg'):
         """
         # TODO: add description here        
 
@@ -47,6 +53,12 @@ class TFenrich:
         None.
 
         """
+        
+        self.TFs = TFs
+        
+        if multiple_testing_correction == 'BenjaminiHochberg': # use this unless otherwise told
+            self.multtest_fun = stat_utils.benjaminihochberg_correction
+        
         self.mapmethod = mapmethod
         if self.mapmethod == 'corr':
             self.target_genes = map2trgt_utils.correlation_genes(TFs).index
@@ -58,9 +70,17 @@ class TFenrich:
             raise ValueError('mapmethod \'' + self.mapmethod + '\' not defined')
             
             
-    def downstream_enrich(self, db='KEGG', FDR=0.05):
-        
-        res = enrich_utils.set_enrichments(self.target_genes, db=db, FDR=FDR)
+    def downstream_enrich(self, mult_test_corr='same', db='KEGG', FDR=0.05):
+
+        # If not specified use global
+        if mult_test_corr == 'same':
+            mult_test_corr = self.multtest_fun
+            
+        res = enrich_utils.set_enrichments(self.target_genes,
+                                           mult_test_corr=mult_test_corr,
+                                           db=db, 
+                                           FDR=FDR,
+                                           )
         self.pathway_enrichments = res
     
     # TODO: Add some plotting function here!
