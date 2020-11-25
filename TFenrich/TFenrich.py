@@ -25,7 +25,7 @@ __contact__ = 'rasma774@gmail.com'
 class TFenrich:
     def __init__(self, 
                  TFs, 
-                 mapmethod='deep', 
+                 mapmethod='corr', 
                  multiple_testing_correction='BenjaminiHochberg',
                  silent=False):
         """
@@ -69,7 +69,7 @@ class TFenrich:
             raise ValueError('mapmethod \'' + self.mapmethod + '\' not defined')
             
             
-    def downstream_enrich(self, mult_test_corr='same', db='KEGG', FDR=0.05):
+    def downstream_enrich(self, mult_test_corr='same', db='GO', FDR=0.05):
 
         # If not specified use global
         if mult_test_corr == 'same':
