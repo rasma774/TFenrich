@@ -34,7 +34,7 @@ def _sortsets(db):
 def _calc_fisher(gene_lists, genes_tmp, ngenes_thresh=10):
       
     # TODO: we really need to do some good selection for D!!!
-    # First, we need to calculate D
+    # Is this a good way?
     tmp = []
     [tmp.append(gene_lists[x]) for x in gene_lists.keys()]
     tmp.append(genes_tmp)

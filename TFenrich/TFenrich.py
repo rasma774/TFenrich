@@ -17,13 +17,10 @@ __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
-# TODO: add deep approach? I dont know, might be bad since we want small models?
-# Actually, the 250-250 model is only 80 MB, 100-100 only 35 MB. We could use pickle
-#   to avoid unneeded dependencies 
 # TODO: we need some way to handle rankings, and not just boolean in/not in list
 #       in the enrichment calculations.
 # TODO: we need to find some good way to get less genes from STRINGdb 
-
+# TODO: if the program is run at the first time, assemble the correlations table
 class TFenrich:
     def __init__(self, 
                  TFs, 

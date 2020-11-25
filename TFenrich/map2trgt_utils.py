@@ -98,12 +98,12 @@ def correlation_genes(TFs, thresh=0.95):
         return target_genes
     
     cval_dist = []
-    for _ in range(100):
+    for _ in range(20):
         randtfs = np.random.choice(corr.index, size=(in_corr.sum()), replace=False)
         ctmp = corr.iloc[:, ~corr.columns.isin(randtfs)][corr.index.isin(randtfs)].abs().sum()
         cval_dist.append(np.sort(ctmp)[int(len(ctmp)*thresh)])
     
-    target_genes_adj = target_genes[target_genes >= np.median(cval_dist)]
+    target_genes_adj = target_genes[target_genes >= np.max(cval_dist)]
     return target_genes_adj
     
 
@@ -142,7 +142,8 @@ def STRING_ppi(TFs, FDR=0.95, Npermut=100):
 
     # TODO: The test here is not stringent at all. The more TFs, the more power,
     # and the more targets we get. Tested random 400 TFs, got 6500 significant genes.
-    # But may be reasonable... ~25% of all possible TFs gave ~25% of all genes. 
+    # But may be reasonable... ~25% of all possible TFs gave ~25% of all genes.
+    # Should add option to just select top N genes
     
     if FDR == -1:
         return summed_score
