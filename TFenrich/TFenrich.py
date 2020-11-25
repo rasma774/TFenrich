@@ -21,6 +21,7 @@ __contact__ = 'rasma774@gmail.com'
 #       in the enrichment calculations.
 # TODO: we need to find some good way to get less genes from STRINGdb 
 # TODO: if the program is run at the first time, assemble the correlations table
+# TODO: add silent option
 class TFenrich:
     def __init__(self, 
                  TFs, 
