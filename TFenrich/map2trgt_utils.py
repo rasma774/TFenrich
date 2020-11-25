@@ -15,7 +15,7 @@ __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
-def trrust_genes(TFs, weighted=False, scilent=False):
+def trrust_genes(TFs, weighted=False):
     # TODO: add something that corrects for genes that map to multiple TFs in input
     print('WARNING: should add something that has to do with number of times each target gene is used')
     """
@@ -32,15 +32,13 @@ def trrust_genes(TFs, weighted=False, scilent=False):
 
     """
     # Load TRRUST
-    if not scilent:
-        print('loading TRRUST')
+    print('loading TRRUST')
     TRRUST = pd.read_csv(
         '../data/TRRUST/trrust_rawdata.human.tsv', 
         sep='\t', 
         header=None,
         )
-    if not scilent:    
-        print('Done')
+    print('Done')
     
     # As of now, we dont use the direction or publications
     TRRUST = TRRUST.iloc[:, :2]
@@ -49,9 +47,9 @@ def trrust_genes(TFs, weighted=False, scilent=False):
     in_TFs = np.in1d(TRRUST[0].unique(), TFs)
     in_TRRUST = np.in1d(TFs, TRRUST[0].unique())
 
-    if not scilent:
-        print(str(100*np.sum(~in_TRRUST)/len(in_TRRUST)) + '% of TFs are not in TRRUST')
-        print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of TRRUST TFs were in the TF list')
+
+    print(str(100*np.sum(~in_TRRUST)/len(in_TRRUST)) + '% of TFs are not in TRRUST')
+    print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of TRRUST TFs were in the TF list')
     
     target_genes = TRRUST[TRRUST[0].isin(TFs)][1].values
     unique_targets, counts = np.unique(target_genes, return_counts=True)
@@ -64,7 +62,7 @@ def trrust_genes(TFs, weighted=False, scilent=False):
     return targets
 
 
-def correlation_genes(TFs, thresh=0.95, scilent=False):
+def correlation_genes(TFs, thresh=0.95):
     """
     
 
@@ -78,20 +76,17 @@ def correlation_genes(TFs, thresh=0.95, scilent=False):
     Panda series of correlating target genes summed over TFs.
 
     """
-    if not scilent:
-        print('loading corr')
+    print('loading corr')
     corr = pd.read_pickle('../data/pickles/correlations.p')
     corr = corr.set_index(corr.columns[0])
-    if not scilent:
-        print('Done')
+    print('Done')
 
 
     in_TFs = corr.index.isin(TFs)
     in_corr = np.in1d(TFs, corr.index)
 
-    if not scilent:
-        print(str(100*np.sum(~in_corr)/len(in_corr)) + '% of TFs are not found')
-        print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of correlation table TFs were in the TF list')
+    print(str(100*np.sum(~in_corr)/len(in_corr)) + '% of TFs are not found')
+    print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of correlation table TFs were in the TF list')
   
     
     # Since the self-correlation is one, we need to remove the input TFs from 
@@ -112,7 +107,7 @@ def correlation_genes(TFs, thresh=0.95, scilent=False):
     return target_genes_adj
     
 
-def STRING_ppi(TFs, FDR=0.95, Npermut=100, scilent=False):
+def STRING_ppi(TFs, FDR=0.95, Npermut=100):
     """
     
 
@@ -130,18 +125,16 @@ def STRING_ppi(TFs, FDR=0.95, Npermut=100, scilent=False):
     None.
 
     """
-    if not scilent:
-        print('loading STRING PPI...')
+    
+    print('loading STRING PPI...')
     ppi = pd.read_pickle('../data/pickles/string_links.p')
-    if not scilent:
-        print('Done')    
+    print('Done')    
     
     in_TFs = np.in1d(ppi.index.unique(), TFs)
     in_STRINGdb = np.in1d(TFs, ppi.index.unique())
 
-    if not scilent:
-        print(str(100*np.sum(~in_STRINGdb)/len(in_STRINGdb)) + '% of TFs are not in STRINGdb')
-        print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of STRINGdb TFs were in the TF list')
+    print(str(100*np.sum(~in_STRINGdb)/len(in_STRINGdb)) + '% of TFs are not in STRINGdb')
+    print(str(100*np.sum(in_TFs)/len(in_TFs))[:5] + '% of STRINGdb TFs were in the TF list')
     
     summed_score = ppi[ppi.index.isin(TFs)].groupby('target_SYMBOL')['combined_score'].sum()
     summed_score = pd.DataFrame(summed_score)
