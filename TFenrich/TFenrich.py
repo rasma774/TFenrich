@@ -21,11 +21,13 @@ __contact__ = 'rasma774@gmail.com'
 #       in the enrichment calculations.
 # TODO: we need to find some good way to get less genes from STRINGdb 
 # TODO: if the program is run at the first time, assemble the correlations table
+# TODO: add silent option
 class TFenrich:
     def __init__(self, 
                  TFs, 
                  mapmethod='deep', 
-                 multiple_testing_correction='BenjaminiHochberg'):
+                 multiple_testing_correction='BenjaminiHochberg',
+                 silent=False):
         """
         # TODO: add description here        
 
@@ -52,17 +54,17 @@ class TFenrich:
         """
         
         self.TFs = TFs
-        
+        self.silent = silent
         if multiple_testing_correction == 'BenjaminiHochberg': # use this unless otherwise told
             self.multtest_fun = stat_utils.benjaminihochberg_correction
         
         self.mapmethod = mapmethod
         if self.mapmethod == 'corr':
-            self.target_genes = map2trgt_utils.correlation_genes(TFs).index
+            self.target_genes = map2trgt_utils.correlation_genes(TFs, silent).index
         elif self.mapmethod == 'TRRUST':
-            self.target_genes = map2trgt_utils.trrust_genes(TFs)
+            self.target_genes = map2trgt_utils.trrust_genes(TFs, silent)
         elif self.mapmethod == 'PPI':
-            self.target_genes = map2trgt_utils.STRING_ppi(TFs)
+            self.target_genes = map2trgt_utils.STRING_ppi(TFs, silent)
         else:
             raise ValueError('mapmethod \'' + self.mapmethod + '\' not defined')
             
