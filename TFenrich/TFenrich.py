@@ -12,6 +12,7 @@ Created on Wed Nov 11 11:30:20 2020
 import enrich_utils
 import map2trgt_utils
 import stat_utils
+import plot_utils
 
 __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
@@ -21,7 +22,7 @@ __contact__ = 'rasma774@gmail.com'
 #       in the enrichment calculations.
 # TODO: we need to find some good way to get less genes from STRINGdb 
 # TODO: if the program is run at the first time, assemble the correlations table
-# TODO: add silent option
+# TOOD: add argparse
 class TFenrich:
     def __init__(self, 
                  TFs, 
@@ -60,16 +61,33 @@ class TFenrich:
         
         self.mapmethod = mapmethod
         if self.mapmethod == 'corr':
-            self.target_genes = map2trgt_utils.correlation_genes(TFs, silent).index
+            self.target_genes = map2trgt_utils.correlation_genes(TFs, silent=silent).index
         elif self.mapmethod == 'TRRUST':
-            self.target_genes = map2trgt_utils.trrust_genes(TFs, silent)
+            self.target_genes = map2trgt_utils.trrust_genes(TFs, silent=silent)
         elif self.mapmethod == 'PPI':
-            self.target_genes = map2trgt_utils.STRING_ppi(TFs, silent)
+            self.target_genes = map2trgt_utils.STRING_ppi(TFs, silent=silent)
         else:
             raise ValueError('mapmethod \'' + self.mapmethod + '\' not defined')
             
             
     def downstream_enrich(self, mult_test_corr='same', db='GO', FDR=0.05):
+        """
+        
+
+        Parameters
+        ----------
+        mult_test_corr : TYPE, optional
+            DESCRIPTION. The default is 'same'.
+        db : TYPE, optional
+            DESCRIPTION. The default is 'GO'.
+        FDR : TYPE, optional
+            DESCRIPTION. The default is 0.05.
+
+        Returns
+        -------
+        None.
+
+        """
 
         # If not specified use global
         if mult_test_corr == 'same':
@@ -80,11 +98,37 @@ class TFenrich:
                                            db=db, 
                                            FDR=FDR,
                                            )
-        self.pathway_enrichments = res
+        self.enrichments = res
     
-    # TODO: Add some plotting function here!
-    #   Suggestion: dotplot?
+    def plot(self, savename=None, plot_Ntop='all', textlength=None, sorton='OR'):
+        """
+        
+
+        Parameters
+        ----------
+        savename : TYPE, optional
+            DESCRIPTION. The default is None.
+        number_to_plot : TYPE, optional
+            DESCRIPTION. The default is 'all'.
+
+        Returns
+        -------
+        None.
+
+        """
+        
+        if plot_Ntop == 'all':
+            plot_Ntop = self.enrichments.shape[0]
+
+        # TODO: add kwargs?
+        f, ax = plot_utils.plot_pvals(self.enrichments.copy(), 
+                                      savename, 
+                                      plot_Ntop,
+                                      textlength=textlength,
+                                      sorton=sorton,
+                                      )
+        return f, ax
     
         
-    
-        
+
+
