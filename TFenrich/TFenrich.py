@@ -23,6 +23,9 @@ __contact__ = 'rasma774@gmail.com'
 # TODO: we need to find some good way to get less genes from STRINGdb 
 # TODO: if the program is run at the first time, assemble the correlations table
 # TOOD: add argparse
+# TODO: Handle p-values as negative log10, such that the Fisher test can be estimated
+# TODO: add the DisGenet database to compare with
+
 class TFenrich:
     def __init__(self, 
                  TFs, 
@@ -100,7 +103,13 @@ class TFenrich:
                                            )
         self.enrichments = res
     
-    def plot(self, savename=None, plot_Ntop='all', textlength=None, sorton='OR'):
+    def plot(self, 
+             savename=None,
+             plot_Ntop='all',
+             textlength=None,
+             sorton='OR',
+             remove_non_FDR=True,
+             ):
         """
         
 
@@ -111,7 +120,7 @@ class TFenrich:
         number_to_plot : TYPE, optional
             DESCRIPTION. The default is 'all'.
 
-        Returns
+        Returns 
         -------
         None.
 
@@ -126,6 +135,7 @@ class TFenrich:
                                       plot_Ntop,
                                       textlength=textlength,
                                       sorton=sorton,
+                                      remove_non_FDR=remove_non_FDR,
                                       )
         return f, ax
     

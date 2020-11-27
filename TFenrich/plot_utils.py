@@ -64,17 +64,21 @@ def plot_pvals(enrichments,
                textlength=30,
                cmap=mpl.cm.OrRd,
                sorton='OR',
+               remove_non_FDR=True
                ):
     
+    if remove_non_FDR:
+        enrichments = enrichments[enrichments.FDR]
+        
     # Handle input variable                             
     if plot_Ntop is None:
         # TODO: what it there are too many here?
         nplot = enrichments.FDR.sum()
     else:
-        nplot = plot_Ntop
+        nplot = np.min((plot_Ntop, enrichments.shape[0]))
         
     # Clean input data
-    enrichments = enrichments[enrichments.FDR].iloc[:, :2]
+    enrichments = enrichments.iloc[:, :2]
     enrichments.p = -np.log10(enrichments.p)
     enrichments = enrichments.sort_values(sorton).iloc[::-1, :]
     enrichments = enrichments.iloc[:nplot, :]
@@ -82,7 +86,7 @@ def plot_pvals(enrichments,
 
     
     # For the colorbar
-    norm = mpl.colors.Normalize(vmin=-np.log10(0.05), vmax=enrichments.p.max())
+    norm = mpl.colors.Normalize(vmin=np.min((enrichments.p.min(), -np.log10(0.05))), vmax=enrichments.p.max())
 
     if textlength is not None:
         enrichments.index = _split_lines(enrichments.index.values, textlength)
@@ -99,7 +103,7 @@ def plot_pvals(enrichments,
     ax.set_yticklabels(enrichments.index[:plot_Ntop][::-1], fontsize=12)
     ax.set_xlabel('Odds Ratio', fontsize=17)
     colorbar = f.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, shrink=0.4, pad = 0.15)
-    colorbar.set_label(r'-log$_{10}$ P', fontsize=12)
+    colorbar.set_label(r'-log$_{10}$ P', fontsize=15, labelpad=-50)
     
     if  savename is not None:
         f.savefig(savename, bbox_inches='tight')

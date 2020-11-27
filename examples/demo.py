@@ -22,12 +22,14 @@ ms_genes = ms_genes[ms_genes.iloc[:,1].isin(TFlist[0])]
 ms_genes = ms_genes.iloc[:,1][ms_genes.iloc[:,2] < 0.1]
 enr = TFenrich(ms_genes.values, mapmethod='corr')
 
-enr.downstream_enrich(db='GWAS')
-a = enr.pathway_enrichments.iloc[:20,:]
+enr.downstream_enrich(db='GO')
+a = enr.enrichments.iloc[:20,:]
+enr.plot(savename='ms_downstream.svg', textlength=30, plot_Ntop=5, sorton='p')
 print(a) 
 
 
-enr.target_genes = TFlist
-enr.downstream_enrich(db='GWAS')
-b = enr.pathway_enrichments.iloc[:20,:]
+enr.target_genes = ms_genes
+enr.downstream_enrich(db='GO')
+b = enr.enrichments.iloc[:20,:]
+enr.plot(savename='ms_TFs.svg', plot_Ntop=5, textlength=30, sorton='p', remove_non_FDR=False)
 print(b)

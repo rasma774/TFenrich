@@ -83,3 +83,38 @@ def _stringdb_bootstrap(summed_score, ppi, nTFs, FDR=0.05, N=100):
     p = sts.norm.cdf(Z)
     is_sign = benjaminihochberg_correction(p, FDR=FDR)
     return is_sign
+
+def _fisher_approx(a,b,c,d):
+    """
+    Estimates very small p-values in a Fisher exact test using logarithms.
+
+    Parameters
+    ----------
+    a, b, c, d : int
+        According to the table [[a, b], [c, d]]
+    
+    Returns
+    -------
+    p : float
+        -log10 estimation of the p value.
+
+    """
+    def get_fact(num1, num2):
+        return [i for i in range(2,num1+num2+1)]
+    
+    ab_fac = get_fact(a,b)
+    cd_fac = get_fact(c,d)
+    ac_fac = get_fact(a,c)
+    bd_fac = get_fact(b,d)
+    
+    all_upper = []
+    for tmp in [ab_fac, cd_fac, ac_fac, bd_fac]:
+        for tmp_element in tmp:
+            all_upper.append(tmp_element)
+            
+    all_lower = []
+    for num in [a,b,c,d,a+b+c+d]:
+        for i in range(2,num+1):
+            all_lower.append(i)
+    
+    return (np.sum(np.log10(all_upper)) - np.sum(np.log10(all_lower)))
