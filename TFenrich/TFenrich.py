@@ -19,19 +19,22 @@ __COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
 # TODO: we need some way to handle rankings, and not just boolean in/not in list
-#       in the enrichment calculations.
-# TODO: we need to find some good way to get less genes from STRINGdb 
+#       in the enrichment calculations. Would, howvever, not work with 
+#       the binding sites such as TRRUST. OTherwise use KS test
 # TODO: if the program is run at the first time, assemble the correlations table
 # TOOD: add argparse
 # TODO: Handle p-values as negative log10, such that the Fisher test can be estimated
 # TODO: add the DisGenet database to compare with
+# TODO: Do an anlysis on the clutering of random TFs and the three downstream mappings .
+# TODO: get a list of all citations in a dict, and append it to the method. Put 
+#       all citations in a textfile
 
 class TFenrich:
     def __init__(self, 
                  TFs, 
                  mapmethod='corr', 
-                 multiple_testing_correction='BenjaminiHochberg',
-                 silent=False):
+                 silent=False,
+                 top_n_genes=None):
         """
         # TODO: add description here        
 
@@ -59,21 +62,32 @@ class TFenrich:
         
         self.TFs = TFs
         self.silent = silent
-        if multiple_testing_correction == 'BenjaminiHochberg': # use this unless otherwise told
-            self.multtest_fun = stat_utils.benjaminihochberg_correction
-        
+
         self.mapmethod = mapmethod
         if self.mapmethod == 'corr':
-            self.target_genes = map2trgt_utils.correlation_genes(TFs, silent=silent).index
+            self.target_genes = map2trgt_utils.correlation_genes(TFs, 
+                                                                 silent=silent,
+                                                                 top_n_genes=top_n_genes
+                                                                 ).index
         elif self.mapmethod == 'TRRUST':
-            self.target_genes = map2trgt_utils.trrust_genes(TFs, silent=silent)
+            self.target_genes = map2trgt_utils.trrust_genes(TFs, 
+                                                            silent=silent,
+                                                            )
         elif self.mapmethod == 'PPI':
-            self.target_genes = map2trgt_utils.STRING_ppi(TFs, silent=silent)
+            self.target_genes = map2trgt_utils.STRING_ppi(TFs, 
+                                                          silent=silent,
+                                                          top_n_genes=top_n_genes
+                                                          )
         else:
             raise ValueError('mapmethod \'' + self.mapmethod + '\' not defined')
             
             
-    def downstream_enrich(self, mult_test_corr='same', db='GO', FDR=0.05):
+    def downstream_enrich(self, 
+                          mult_test_corr='same', 
+                          db='GO', 
+                          FDR=0.05,
+                          multiple_testing_correction='BenjaminiHochberg',
+                          ):
         """
         
 
@@ -92,7 +106,13 @@ class TFenrich:
 
         """
 
-        # If not specified use global
+                
+        if multiple_testing_correction == 'BenjaminiHochberg': # use this unless otherwise told
+            self.multtest_fun = stat_utils.benjaminihochberg_correction
+        else:
+            # Here, we let the user define the testing function
+            self.multtest_fun = multiple_testing_correction
+
         if mult_test_corr == 'same':
             mult_test_corr = self.multtest_fun
             
@@ -130,7 +150,7 @@ class TFenrich:
             plot_Ntop = self.enrichments.shape[0]
 
         # TODO: add kwargs?
-        f, ax = plot_utils.plot_pvals(self.enrichments.copy(), 
+        f, ax = plot_utils.plot_res(self.enrichments.copy(), 
                                       savename, 
                                       plot_Ntop,
                                       textlength=textlength,

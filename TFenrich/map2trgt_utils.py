@@ -65,7 +65,7 @@ def trrust_genes(TFs, weighted=False, silent=False):
     return targets
 
 
-def correlation_genes(TFs, thresh=0.95, silent=False):
+def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
     """
     
 
@@ -100,6 +100,9 @@ def correlation_genes(TFs, thresh=0.95, silent=False):
     corr_out = corr.iloc[:, ~corr.columns.isin(TFs)]
     target_genes = corr_out[in_TFs].abs().sum()
 
+    if top_n_genes is not None:
+        return target_genes.sort_values()[::-1][:top_n_genes]
+        
     if thresh == -1:
         return target_genes
     
@@ -113,7 +116,7 @@ def correlation_genes(TFs, thresh=0.95, silent=False):
     return target_genes_adj
     
 
-def STRING_ppi(TFs, FDR=0.95, Npermut=100, silent=False):
+def STRING_ppi(TFs, FDR=0.95, Npermut=100, silent=False, top_n_genes=None):
     """
     
 
@@ -148,6 +151,8 @@ def STRING_ppi(TFs, FDR=0.95, Npermut=100, silent=False):
     summed_score = ppi[ppi.index.isin(TFs)].groupby('target_SYMBOL')['combined_score'].sum()
     summed_score = pd.DataFrame(summed_score)
 
+    if top_n_genes is not None:
+        return summed_score.sort_values('combined_score')[::-1][:top_n_genes]
 
     # TODO: The test here is not stringent at all. The more TFs, the more power,
     # and the more targets we get. Tested random 400 TFs, got 6500 significant genes.

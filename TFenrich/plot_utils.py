@@ -57,7 +57,7 @@ def _get_template():
                    labelsize=14)
     return f, ax
     
-def plot_pvals(enrichments, 
+def plot_res(enrichments, 
                savename=None, 
                plot_Ntop=25, 
                color='#850000ff',
