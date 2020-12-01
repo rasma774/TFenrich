@@ -104,7 +104,7 @@ def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
         return target_genes.sort_values()[::-1][:top_n_genes]
         
     if thresh == -1:
-        return target_genes
+        return target_genes.index.values
     
     cval_dist = []
     for _ in range(20):
@@ -113,7 +113,7 @@ def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
         cval_dist.append(np.sort(ctmp)[int(len(ctmp)*thresh)])
     
     target_genes_adj = target_genes[target_genes >= np.max(cval_dist)]
-    return target_genes_adj
+    return target_genes_adj.index.values
     
 
 def STRING_ppi(TFs, FDR=0.95, Npermut=100, silent=False, top_n_genes=None):

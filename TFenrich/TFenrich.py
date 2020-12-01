@@ -28,6 +28,9 @@ __contact__ = 'rasma774@gmail.com'
 # TODO: Do an anlysis on the clutering of random TFs and the three downstream mappings .
 # TODO: get a list of all citations in a dict, and append it to the method. Put 
 #       all citations in a textfile
+# TODO: I think i should remove TRRUST, there are too many biases atm...
+# TODO: take decision on whether to only have the correlation-based analysis.
+#       Seems like the PPi is heavily biased.
 
 class TFenrich:
     def __init__(self, 
@@ -59,31 +62,21 @@ class TFenrich:
         None.
 
         """
+        assert len(TFs) > 0
         
         self.TFs = TFs
         self.silent = silent
 
-        self.mapmethod = mapmethod
-        if self.mapmethod == 'corr':
-            self.target_genes = map2trgt_utils.correlation_genes(TFs, 
-                                                                 silent=silent,
-                                                                 top_n_genes=top_n_genes
-                                                                 ).index
-        elif self.mapmethod == 'TRRUST':
-            self.target_genes = map2trgt_utils.trrust_genes(TFs, 
-                                                            silent=silent,
-                                                            )
-        elif self.mapmethod == 'PPI':
-            self.target_genes = map2trgt_utils.STRING_ppi(TFs, 
-                                                          silent=silent,
-                                                          top_n_genes=top_n_genes
-                                                          )
-        else:
-            raise ValueError('mapmethod \'' + self.mapmethod + '\' not defined')
+        if mapmethod == 'corr':
+            self.mapmethod = map2trgt_utils.correlation_genes
+            
+        self.target_genes = self.mapmethod(TFs, 
+                                           silent=silent,
+                                           top_n_genes=top_n_genes
+                                           ).index.values
             
             
     def downstream_enrich(self, 
-                          mult_test_corr='same', 
                           db='GO', 
                           FDR=0.05,
                           multiple_testing_correction='BenjaminiHochberg',
@@ -113,11 +106,8 @@ class TFenrich:
             # Here, we let the user define the testing function
             self.multtest_fun = multiple_testing_correction
 
-        if mult_test_corr == 'same':
-            mult_test_corr = self.multtest_fun
-            
         res = enrich_utils.set_enrichments(self.target_genes,
-                                           mult_test_corr=mult_test_corr,
+                                           mult_test_corr=self.multtest_fun,
                                            db=db, 
                                            FDR=FDR,
                                            )

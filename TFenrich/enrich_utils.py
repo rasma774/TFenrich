@@ -66,7 +66,7 @@ def _calc_fisher(gene_lists, genes_tmp, ngenes_thresh=10):
     return res
 
 
-def set_enrichments(gene_set, mult_test_corr=None, db='KEGG', FDR=0.05, ):
+def set_enrichments(gene_set, mult_test_corr=None, db='GO', FDR=0.05, ):
     """
     
 
@@ -85,7 +85,6 @@ def set_enrichments(gene_set, mult_test_corr=None, db='KEGG', FDR=0.05, ):
     enrichment analysis .
 
     """
-    
     if db == 'GO':
         gene_lists = pd.read_pickle('../data/pickles/go_terms.p')
     elif db.upper() == 'ALL':
