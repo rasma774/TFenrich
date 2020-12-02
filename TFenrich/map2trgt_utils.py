@@ -101,7 +101,7 @@ def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
     target_genes = corr_out[in_TFs].abs().sum()
 
     if top_n_genes is not None:
-        return target_genes.sort_values()[::-1][:top_n_genes]
+        return target_genes.sort_values()[::-1][:top_n_genes].index
         
     if thresh == -1:
         return target_genes.index.values

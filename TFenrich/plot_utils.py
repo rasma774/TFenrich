@@ -90,7 +90,7 @@ def plot_res(enrichments,
 
     if textlength is not None:
         enrichments.index = _split_lines(enrichments.index.values, textlength)
-        padding = 2
+        padding = 1
     else:
         padding=1
         
