@@ -9,10 +9,9 @@ Created on Wed Nov 11 13:34:37 2020
 import pandas as pd
 import numpy as np
 
-import stat_utils
 
 __author__ = 'Rasmus Magnusson'
-__COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
+__COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 
 def trrust_genes(TFs, weighted=False, silent=False):
@@ -79,9 +78,11 @@ def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
     Panda series of correlating target genes summed over TFs.
 
     """
+    
+    pw = __file__.split('/src')[0] 
     if not silent:
         print('loading corr')
-    corr = pd.read_pickle('../data/pickles/correlations.p')
+    corr = pd.read_pickle(pw + '/data/pickles/correlations.p')
     corr = corr.set_index(corr.columns[0])
     if not silent:
         print('Done')

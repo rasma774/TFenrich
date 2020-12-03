@@ -10,7 +10,7 @@ import numpy as np
 import scipy.stats as sts
 
 __author__ = 'Rasmus Magnusson'
-__COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
+__COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 
 def benjaminihochberg_correction(p, FDR=0.05):

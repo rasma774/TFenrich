@@ -10,13 +10,9 @@ import numpy as np
 import scipy.stats as sts
 import pandas as pd
 
-from sklearn.metrics import roc_auc_score
-
-
-from stat_utils import benjaminihochberg_correction
 
 __author__ = 'Rasmus Magnusson'
-__COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
+__COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 
 def _sortsets(db):

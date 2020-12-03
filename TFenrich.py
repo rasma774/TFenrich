@@ -9,14 +9,14 @@ Created on Wed Nov 11 11:30:20 2020
 
 """
 
-import enrich_utils
-import map2trgt_utils
-import stat_utils
-import plot_utils
-import parse_utils
+from src import enrich_utils
+from src import map2trgt_utils
+from src import stat_utils
+from src import plot_utils
+from src import parse_utils
 
 __author__ = 'Rasmus Magnusson'
-__COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
+__COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 __LICENSE__ = 'GNU Affero General Public License v3.0'
 __version__ = '0.00'
@@ -137,19 +137,21 @@ class TFenrich:
                                       )
         return f, ax
     
-        
-        
-if __name__ == '__main__':
-    args = parse_utils.parse()
-    print(args)
-    # Map TFs to targets
-    enr = TFenrich(args.tfs, silent=args.silent[0], top_n_genes=args.ngenes[0])
-    
-    # Calculate the overlaps between putative downstream genes and gene sets 
-    enr.downstream_enrich(db=args.db, FDR=args.FDR)
-    
-    if args.plotname != '-1':
-        enr.plot(savename=args.plotname, plot_Ntop=args.plot_n_top[0])
-    
-    enr.enrichments.to_csv(args.results_savename)
-        
+# =============================================================================
+#         
+#         
+# if __name__ == '__main__':
+#     args = parse_utils.parse()
+#     print(args)
+#     # Map TFs to targets
+#     enr = TFenrich(args.tfs, silent=args.silent[0], top_n_genes=args.ngenes[0])
+#     
+#     # Calculate the overlaps between putative downstream genes and gene sets 
+#     enr.downstream_enrich(db=args.db, FDR=args.FDR)
+#     
+#     if args.plotname != '-1':
+#         enr.plot(savename=args.plotname, plot_Ntop=args.plot_n_top[0])
+#     
+#     enr.enrichments.to_csv(args.results_savename)
+#         
+# =============================================================================

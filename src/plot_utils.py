@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib as mpl
 
 __author__ = 'Rasmus Magnusson'
-__COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
+__COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 
 _golden = (1 + (5**(.5)))/2
