@@ -83,7 +83,6 @@ def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
     if not silent:
         print('loading corr')
     corr = pd.read_pickle(pw + '/data/pickles/correlations.p')
-    corr = corr.set_index(corr.columns[0])
     if not silent:
         print('Done')
 

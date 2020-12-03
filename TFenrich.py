@@ -19,7 +19,7 @@ __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 __LICENSE__ = 'GNU Affero General Public License v3.0'
-__version__ = '0.00'
+__version__ = '0.01'
 
 
 # TODO: if the program is run at the first time, assemble the correlations table
