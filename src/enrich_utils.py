@@ -81,15 +81,18 @@ def set_enrichments(gene_set, mult_test_corr=None, db='GO', FDR=0.05, ):
     enrichment analysis .
 
     """
-    if db == 'GO':
+    if type(db) is not str:
+        gene_lists = db
+    elif db.upper()  == 'GO':
         gene_lists = pd.read_pickle('../data/pickles/go_terms.p')
-    elif db.upper() == 'ALL':
-        assert False
     elif db.upper() == 'GWAS':
         gene_lists = pd.read_pickle('../data/pickles/gwas.p')
-    else:
+    elif (db == 'KEGG') or (db == 'REACTOME'):
         # TODO: make this to a pickle too, and add 'ALL' as option for both
         gene_lists = _sortsets(db)
+    else:
+        raise ValueError('db not specified correctly, should be either dict, or string with values "GO", "GWAS", "KEGG", or "REACTOME"')
+        
         
         
     res = _calc_fisher(gene_lists, gene_set)
