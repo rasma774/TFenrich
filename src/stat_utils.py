@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 11 16:16:15 2020
-
-@author: rasmus
-"""
-
 import numpy as np
 import scipy.stats as sts
 

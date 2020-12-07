@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 11 13:26:33 2020
-
-@author: rasmus
-"""
-
 import numpy as np
 import scipy.stats as sts
 import pandas as pd
@@ -18,7 +10,8 @@ __contact__ = 'rasma774@gmail.com'
 def _sortsets(db):
     # TODO: add tests that db is in ['KEGG', 'REACTOME', 'ALL']
     gene_lists = {}
-    f = open('../data/gene_annotations/gene_annot/c2.all.v7.1.symbols.gmt')
+    pw = __file__.split('/src')[0] 
+    f = open(pw + '/data/gene_annotations/gene_annot/c2.all.v7.1.symbols.gmt')
     for line in f:
         line = line.replace('\n', '').split('\t')
         if (line[0][:len(db)] == db) or (db.upper() =='ALL'):
@@ -81,12 +74,15 @@ def set_enrichments(gene_set, mult_test_corr=None, db='GO', FDR=0.05, ):
     enrichment analysis .
 
     """
+    
+    pw = __file__.split('/src')[0] 
+
     if type(db) is not str:
         gene_lists = db
     elif db.upper()  == 'GO':
-        gene_lists = pd.read_pickle('../data/pickles/go_terms.p')
+        gene_lists = pd.read_pickle(pw + '/data/pickles/go_terms.p')
     elif db.upper() == 'GWAS':
-        gene_lists = pd.read_pickle('../data/pickles/gwas.p')
+        gene_lists = pd.read_pickle(pw + '/data/pickles/gwas.p')
     elif (db == 'KEGG') or (db == 'REACTOME'):
         # TODO: make this to a pickle too, and add 'ALL' as option for both
         gene_lists = _sortsets(db)

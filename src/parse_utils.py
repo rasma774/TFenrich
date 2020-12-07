@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Dec  2 07:36:30 2020
-
-@author: rasmus
-"""
 
 import argparse
 
@@ -55,7 +48,7 @@ def parse():
                         nargs=1,
                         help='The name of the file to which the enrichment results are saved')
     parser.add_argument('--ngenes',
-                        default=-1,
+                        default=None,
                         type=int,
                         nargs=1,
                         help='Number of top target genes to be analysed. Default is\n\

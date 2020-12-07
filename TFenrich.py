@@ -1,14 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 11 11:30:20 2020
-
-@author: rasmus
-
-# TODO: add docstrings when we see that everything works
-
-"""
-
 from src import enrich_utils
 from src import map2trgt_utils
 from src import stat_utils
@@ -138,21 +127,18 @@ class TFenricher:
                                       )
         return f, ax
     
-# =============================================================================
-#         
-#         
-# if __name__ == '__main__':
-#     args = parse_utils.parse()
-#     print(args)
-#     # Map TFs to targets
-#     enr = TFenrich(args.tfs, silent=args.silent[0], top_n_genes=args.ngenes[0])
-#     
-#     # Calculate the overlaps between putative downstream genes and gene sets 
-#     enr.downstream_enrich(db=args.db, FDR=args.FDR)
-#     
-#     if args.plotname != '-1':
-#         enr.plot(savename=args.plotname, plot_Ntop=args.plot_n_top[0])
-#     
-#     enr.enrichments.to_csv(args.results_savename)
-#         
-# =============================================================================
+        
+        
+if __name__ == '__main__':
+    args = parse_utils.parse()
+    # Map TFs to targets
+    enr = TFenricher(args.tfs, silent=args.silent, top_n_genes=args.ngenes)
+    
+    # Calculate the overlaps between putative downstream genes and gene sets 
+    enr.downstream_enrich(db=args.db, FDR=args.FDR)
+    
+    if args.plotname != '-1':
+        enr.plot(savename=args.plotname, plot_Ntop=args.plot_n_top[0])
+    
+    enr.enrichments.to_csv(args.results_savename)
+        
