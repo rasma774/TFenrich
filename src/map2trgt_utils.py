@@ -1,14 +1,14 @@
 import pandas as pd
 import numpy as np
 
+np.random.seed(0)
 
 __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 
-def trrust_genes(TFs, weighted=False, silent=False):
+def trrust_genes(TFs, weighted=False, silent=False, top_n_genes=None):
     # TODO: add something that corrects for genes that map to multiple TFs in input
-    print('WARNING: should add something that has to do with number of times each target gene is used')
     """
     
 
@@ -99,7 +99,7 @@ def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
         return target_genes.index.values
     
     cval_dist = []
-    for _ in range(20):
+    for _ in range(40):
         randtfs = np.random.choice(corr.index, size=(in_corr.sum()), replace=False)
         ctmp = corr.iloc[:, ~corr.columns.isin(randtfs)][corr.index.isin(randtfs)].abs().sum()
         cval_dist.append(np.sort(ctmp)[int(len(ctmp)*thresh)])
@@ -107,6 +107,7 @@ def correlation_genes(TFs, thresh=0.95, silent=False, top_n_genes=None):
     target_genes_adj = target_genes[target_genes >= np.max(cval_dist)]
     return target_genes_adj.index.values
     
+
 
 def STRING_ppi(TFs, FDR=0.95, Npermut=100, silent=False, top_n_genes=None):
     """
@@ -126,7 +127,6 @@ def STRING_ppi(TFs, FDR=0.95, Npermut=100, silent=False, top_n_genes=None):
     None.
 
     """
-    
     if not silent:
         print('loading STRING PPI...')
     ppi = pd.read_pickle('../data/pickles/string_links.p')
@@ -154,7 +154,7 @@ def STRING_ppi(TFs, FDR=0.95, Npermut=100, silent=False, top_n_genes=None):
     if FDR == -1:
         return summed_score
     else:    
-        BH_sign = stat_utils._stringdb_bootstrap(summed_score.copy(), # to know what our gene scores are
+        BH_sign = _stringdb_bootstrap(summed_score.copy(), # to know what our gene scores are
                                                  ppi, # to get random gene scores
                                                  in_STRINGdb.sum(), # to know how many random TFs to draw
                                                  FDR=FDR, 

@@ -9,7 +9,6 @@ __COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 __LICENSE__ = 'GNU Affero General Public License v3.0'
 __version__ = '0.01'
-__all__ = ['TFenricher']
 
 
 # TODO: if the program is run at the first time, assemble the correlations table
@@ -42,11 +41,13 @@ class TFenricher:
         """
         assert len(TFs) > 0
         
-        self.TFs = TFs
+        self.TFs = TFs.copy()
         self.silent = silent
 
         if mapmethod == 'corr':
             self.mapmethod = map2trgt_utils.correlation_genes
+        else:
+            self.mapmethod = mapmethod
             
         self.target_genes = self.mapmethod(TFs, 
                                            silent=silent,
@@ -97,7 +98,8 @@ class TFenricher:
              textlength=None,
              sorton='OR',
              remove_non_FDR=True,
-             ):
+             padding=0.7,
+             tick_font_size=14):
         """
         
 
@@ -124,6 +126,8 @@ class TFenricher:
                                       textlength=textlength,
                                       sorton=sorton,
                                       remove_non_FDR=remove_non_FDR,
+                                      padding=padding,
+                                      tick_font_size=tick_font_size,
                                       )
         return f, ax
     

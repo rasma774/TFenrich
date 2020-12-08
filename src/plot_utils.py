@@ -56,7 +56,9 @@ def plot_res(enrichments,
                textlength=30,
                cmap=mpl.cm.OrRd,
                sorton='OR',
-               remove_non_FDR=True
+               remove_non_FDR=True,
+               padding=0.7,
+               tick_font_size=14,
                ):
     
     if remove_non_FDR:
@@ -82,17 +84,17 @@ def plot_res(enrichments,
 
     if textlength is not None:
         enrichments.index = _split_lines(enrichments.index.values, textlength)
-        padding = 1
-    else:
-        padding=1
         
     f, ax = _get_template()
+    ax.tick_params(axis='both', labelsize=tick_font_size)
+    
     
     for i in range(nplot):
         ax.barh(padding*(nplot - i), width=enrichments.OR[i], height=0.4, color=cmap(norm(enrichments.p[i])))    
     
+    ax.set_xlim([0, enrichments.OR[:i].max()*1.2])
     ax.set_yticks(padding*np.array(range(1, 1 + nplot)))
-    ax.set_yticklabels(enrichments.index[:plot_Ntop][::-1], fontsize=12)
+    ax.set_yticklabels(enrichments.index[:plot_Ntop][::-1])
     ax.set_xlabel('Odds Ratio', fontsize=17)
     colorbar = f.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, shrink=0.4, pad = 0.15)
     colorbar.set_label(r'-log$_{10}$ P', fontsize=15, labelpad=-50)
