@@ -1,7 +1,6 @@
 docs/
 TFenrich/__pycache__
 __pycache__/
-example/
 examples/
 implementations/
 TFenrich.egg-info/
