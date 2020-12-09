@@ -7,7 +7,7 @@ The transcription factor downstream annotation enricher (TFenricher) package is 
 
 Transcription factors (TFs) are the upstream regulators that orchestrate gene expression, and therefore a centrepiece in bioinformatics studies. A popular strategy that helps understanding the biological context of genes/proteins includes basic annotation enrichment. There are several annotation enrichment methods available, yet these methods are not well suited for analysing groups of TFs, particularly since such methods fail to include downstream processes. Here, we present TFenricher, a Python toolbox that focuses specifically at identifying gene ontologies, cellular pathways, and diseases that are overrepresented among genes that are downstream of user-defined sets of TFs. Given a set of TFs, TFenricher infers downstream genes and calculates enrichments in some of the most common databases of gene functionalities, including GO, KEGG, and Reactome. The TFenricher package enables users to search for biological context in any set of TFs and their downstream genes.
 
-Examples of how to use TFenricher are found below, and in a jupyter notebook under ./examples/
+Examples of how to use TFenricher are found below, and in a Jupyter notebook under ./examples/
 
 Installation
 ============
@@ -39,14 +39,39 @@ All dependencies are included as per default in a Conda environment,
 
 Usage:
 ======
+Here are the basic usages of the TFenricher. A more comprehensive example can e found as a Jupyter notebook in the ./example/ folder
+
 In python:
 ```python
 # Comment
->>> import TFenricher 
+>>> from TFenrich import TFenricher
+enr = TFenricher(list_of_tfs)
+
+# to print the inferred target genes
+print(enr.target_genes)
+
+# Do ontology analysis. To set dataset to calculate overlaps with, 
+# set parameter 'db' to either 'GO', 'KEGG', 'GWAS', or 'REACTOME'. 
+# Default is 'GO'
+enr.downstream_enrich(db='GO')
+
+# Save the results 
+# The 'enrichments' variable is a pandas dataframe, with all its methods
+enr.enrichments.to_csv('savename.csv')
+
+# Plot the results
+enr.plot(savename='fig.svg')
+
+# Since TFenricher increases statistical power, we might want to only plot 
+# the top n terms. We also choose to sort on odds ratios or p values ('OR' or 'p')
+enr.plot(savename='fig_top_5.png', plot_Ntop=5, sorton='OR')
 ```
 Or from the command line:
 ```console
-python TFenricher.py --TFs tfs.txt
+python TFenrich.py --TFs tfs.txt
+
+# To get a full list of input parameters, run
+python TFenrich.py --help 
 ```
 
 
