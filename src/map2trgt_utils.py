@@ -8,7 +8,6 @@ __COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 
 def trrust_genes(TFs, weighted=False, silent=False, top_n_genes=None):
-    # TODO: add something that corrects for genes that map to multiple TFs in input
     """
     
 

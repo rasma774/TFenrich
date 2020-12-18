@@ -3,19 +3,19 @@ from src import map2trgt_utils
 from src import stat_utils
 from src import plot_utils
 from src import parse_utils
+from src import citation_handler
 
 __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 __LICENSE__ = 'GNU Affero General Public License v3.0'
 __version__ = '0.01'
+__cite__ = ''
 
 
 # TODO: if the program is run at the first time, assemble the correlations table
 # TODO: Handle p-values as negative log10, such that the Fisher test can be estimated
 # TODO: add the DisGenet database to compare with
-# TODO: get a list of all citations in a dict, and append it to the method. Put 
-#       all citations in a textfile
 
 class TFenricher:
     def __init__(self, 
@@ -43,12 +43,17 @@ class TFenricher:
         
         self.TFs = TFs.copy()
         self.silent = silent
+        
+        # For the references
+        self.used_methods = []
+                    
 
         if mapmethod == 'corr':
             self.mapmethod = map2trgt_utils.correlation_genes
+            self.used_methods.append('corrs')
         else:
             self.mapmethod = mapmethod
-            
+    
         self.target_genes = self.mapmethod(TFs, 
                                            silent=silent,
                                            top_n_genes=top_n_genes
@@ -85,6 +90,9 @@ class TFenricher:
             # Here, we let the user define the testing function
             self.multtest_fun = multiple_testing_correction
 
+        if type(db) == str:
+            self.used_methods.append(db)
+        
         res = enrich_utils.set_enrichments(self.target_genes,
                                            mult_test_corr=self.multtest_fun,
                                            db=db, 
@@ -131,6 +139,17 @@ class TFenricher:
                                       )
         return f, ax
     
+    def cite(self):
+        """
+        Write the references to the databases used, and the TFenricher reference
+
+        Returns
+        -------
+        None.
+
+        """
+        citation_handler.write_citations(self.used_methods)
+        
         
         
 if __name__ == '__main__':

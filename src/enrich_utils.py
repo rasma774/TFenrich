@@ -8,7 +8,6 @@ __COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 
 def _sortsets(db):
-    # TODO: add tests that db is in ['KEGG', 'REACTOME', 'ALL']
     gene_lists = {}
     pw = __file__.split('/src')[0] 
     f = open(pw + '/data/gene_annotations/gene_annot/c2.all.v7.1.symbols.gmt')
@@ -83,7 +82,7 @@ def set_enrichments(gene_set, mult_test_corr=None, db='GO', FDR=0.05, ):
         gene_lists = pd.read_pickle(pw + '/data/pickles/go_terms.p')
     elif db.upper() == 'GWAS':
         gene_lists = pd.read_pickle(pw + '/data/pickles/gwas.p')
-    elif (db == 'KEGG') or (db == 'REACTOME'):
+    elif (db.upper() == 'KEGG') or (db.upper() == 'REACTOME'):
         # TODO: make this to a pickle too, and add 'ALL' as option for both
         gene_lists = _sortsets(db)
     else:
