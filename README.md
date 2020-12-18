@@ -65,6 +65,10 @@ enr.plot(savename='fig.svg')
 # Since TFenricher increases statistical power, we might want to only plot 
 # the top n terms. We also choose to sort on odds ratios or p values ('OR' or 'p')
 enr.plot(savename='fig_top_5.png', plot_Ntop=5, sorton='OR')
+
+# Write the reference to TFenricher and third-party software
+enr.cite()
+
 ```
 Or from the command line:
 ```console
@@ -78,7 +82,7 @@ python TFenrich.py --help
 
 In depth description of TFenricher
 ===============================
-The TFenricher algorithm works in two distinct steps (Fig. 1a). First, it maps a user-defined list of TFs to putative downstream genes using lookup-tables of co-expression that comes included with the software. In detail, the expression correlation was extracted using the ARCHS4 database\cite{} and is based on data from >100k gene expression profiles, making it one of the most extensive co-expression analyses currently available. This mapping can, however, easily be replaced to a method defined by the user.
+The TFenricher algorithm works in two distinct steps. First, it maps a user-defined list of TFs to putative downstream genes using lookup-tables of co-expression that comes included with the software. In detail, the expression correlation was extracted using the ARCHS4 database and is based on data from >100k gene expression profiles, making it one of the most extensive co-expression analyses currently available. This mapping can, however, easily be replaced to a method defined by the user.
 
 The second step takes the mapped target genes and performs enrichment analyses on gene sets annotated in, as per the choice of the user, KEGG, GO, REACTOME, the GWAS catalogue, or, alternatively, any set defined by the user. Moreover, enrichments are calculated using a Fisher’s exact test, and multiple testing correction is available using either a Bonferroni or Benjamini-Hochberg correction, or any correction provided by the user.
 
@@ -86,7 +90,7 @@ The second step takes the mapped target genes and performs enrichment analyses o
 Contributor:
 =============
 
- Rasmus Magnusson: Development of the package.
+Rasmus Magnusson: Development of the package.
 
 Current Members in the Project
 ------------------------------
