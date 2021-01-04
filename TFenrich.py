@@ -6,14 +6,13 @@ from src import parse_utils
 from src import citation_handler
 
 __author__ = 'Rasmus Magnusson'
-__COPYRIGHT__ = 'Copyright (C) 2020 Rasmus Magnusson'
+__COPYRIGHT__ = 'Copyright (C) 2021 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 __LICENSE__ = 'GNU Affero General Public License v3.0'
 __version__ = '0.01'
 __cite__ = ''
 
 
-# TODO: if the program is run at the first time, assemble the correlations table
 # TODO: Handle p-values as negative log10, such that the Fisher test can be estimated
 # TODO: add the DisGenet database to compare with
 
