@@ -14,7 +14,8 @@ __cite__ = ''
 
 
 # TODO: Handle p-values as negative log10, such that the Fisher test can be estimated
-# TODO: add the DisGenet database to compare with
+# TODO: add the DisGenet database to compare with?
+# TODO: put the TFenricher ref into citation when possible
 
 class TFenricher:
     def __init__(self, 
@@ -23,21 +24,43 @@ class TFenricher:
                  silent=False,
                  top_n_genes=None):
         """
+        
 
         Parameters
         ----------
-        TFs : list or dict
-            If list, a list of the TFs that are subject to the analysis.
-            If a dict, a dict of TFs and weights. Only applicable if mapmethod
-            is 'deep'
-        mapmethod : function, optional
-           
+        TFs : list
+            List of transcription factors (TFs) in SYMBOL annotations.
+        
+        mapmethod : str or function, optional
+            The function to map TFs to target genes. If an independent function
+            is given, the function should take a list of TFs, and return a list
+            of target genes. The default is 'corr', a built-in multiple testing
+            corrected correlation cut-off.
+        
+        silent : bool, optional
+            Specify whether to print the output. The default is False.
+        
+        top_n_genes : int or None, optional
+            In the case of an execive number of output genes from 'mapmethod', 
+            TFenricher can be set to only consider the top N genes in 
+            top_n_genes. The default is None, equaling to include all genes 
+            returned from the mapmethod.
 
-        Returns
+        
+        Attributes
         -------
-        None.
-
+        target_genes : The estimated target genes.
+        
+        
+        How to cite
+        -------
+        <put cite here>
+        Moreover, additional citation from the third-party materials can be 
+        accessed using the TFenricher.cite method. 
+        
+        Thank you for using TFenricher!
         """
+        
         assert len(TFs) > 0
         
         self.TFs = TFs.copy()
@@ -69,16 +92,30 @@ class TFenricher:
 
         Parameters
         ----------
-        mult_test_corr : TYPE, optional
-            DESCRIPTION. The default is 'same'.
-        db : TYPE, optional
-            DESCRIPTION. The default is 'GO'.
-        FDR : TYPE, optional
-            DESCRIPTION. The default is 0.05.
-
-        Returns
+        db : str or dict, optional
+            If a string, 'db' should be in ['GO', REACTOME', 'KEGG', GWAS'] 
+            Else, 'db' can be a dict with annotations as keys, and associated
+            genes as elements, e.g. {'annot' : ['gene1', 'gene2'}. Here, the
+            gene names are in the SYMBOL id. Note that, in the case of 'db' 
+            being a dict, TFenricher.downstream_enrich by default removes 
+            annotations with fewer target genes than 10. 
+            The default is 'GO'.
+        
+        FDR : float, optional
+            The accepted false discovery rate of associated annotations. The
+            default is 0.05.
+        
+        multiple_testing_correction : str or function, optional
+            The name of the multiple testing correction method. The default is
+            'BenjaminiHochberg'. For examples of how to pass own funciton here,
+            please see the github page or 
+           stat_utils.benjaminihochberg_correction, which is also the default
+            
+        Attributes
         -------
-        None.
+        enrichments : pandas DataFrame of the results, with annotation, P-value
+        and a bool value of whether the test passed a multiple testing 
+        correction
 
         """
 
@@ -112,17 +149,39 @@ class TFenricher:
 
         Parameters
         ----------
-        savename : TYPE, optional
-            DESCRIPTION. The default is None.
-        number_to_plot : TYPE, optional
-            DESCRIPTION. The default is 'all'.
+        savename : str, optional
+            IF specified, save the fig to this path. The default is None.
+       
+        plot_Ntop : str or int, optional
+            If int, plot the N top associations. If 'all' plot all 
+            associations that passed mult. testing correction. The default is
+            'all'.
+        
+        textlength : int, optional
+            At what position to wrap the annotations headings in the figure. 
+            TFenricher.plot searches for the most suitable place closest to the
+            textlengh int and inserts a new line. The default is None.
+            
+        sorton : {'OR', 'p'}, optional
+            Which variable of the results DataFrame to sort on. The default is
+            'OR'.
+        remove_non_FDR : bool, optional
+            If set to False, also annotations that do not pass an FDR can be 
+            plotted. The default is True.
+        
+        padding : float, optional
+            Adds some padding between the bars in the plot. The default is 0.7.
+            
+        tick_font_size : int, optional
+            The size of the plot ticks. The default is 14.
 
-        Returns 
+        Returns
         -------
-        None.
+        f : matplotlib figure.
+
+        ax : Axes of a matplotlib figure.
 
         """
-        
         if plot_Ntop == 'all':
             plot_Ntop = self.enrichments.shape[0]
 
@@ -140,12 +199,8 @@ class TFenricher:
     
     def cite(self):
         """
-        Write the references to the databases used, and the TFenricher reference
-
-        Returns
-        -------
-        None.
-
+        Write the references to the databases used, and the TFenricher 
+        reference.
         """
         citation_handler.write_citations(self.used_methods)
         
