@@ -3,7 +3,7 @@ TFenricher
 
 About TFenricher
 -------------
-The transcription factor downstream annotation enricher (TFenricher) package is a bioinformatics tool to enable users to do an enrichment analysis of lists of transcription factors (TFs). 
+The transcription factor downstream annotation enricher (TFenricher) package is a bioinformatics tool to enable users to do an enrichment analyses on lists of transcription factors (TFs). 
 
 Transcription factors (TFs) are the upstream regulators that orchestrate gene expression, and therefore a centrepiece in bioinformatics studies. A popular strategy that helps understanding the biological context of genes/proteins includes basic annotation enrichment. There are several annotation enrichment methods available, yet these methods are not well suited for analysing groups of TFs, particularly since such methods fail to include downstream processes. Here, we present TFenricher, a Python toolbox that focuses specifically at identifying gene ontologies, cellular pathways, and diseases that are overrepresented among genes that are downstream of user-defined sets of TFs. Given a set of TFs, TFenricher infers downstream genes and calculates enrichments in some of the most common databases of gene functionalities, including GO, KEGG, and Reactome. The TFenricher package enables users to search for biological context in any set of TFs and their downstream genes.
 
