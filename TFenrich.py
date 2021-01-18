@@ -13,7 +13,6 @@ __version__ = '0.01'
 __cite__ = ''
 
 
-# TODO: Handle p-values as negative log10, such that the Fisher test can be estimated
 # TODO: add the DisGenet database to compare with?
 # TODO: put the TFenricher ref into citation when possible
 
@@ -127,6 +126,7 @@ class TFenricher:
             self.multtest_fun = multiple_testing_correction
 
         if type(db) == str:
+            db = db.upper()
             self.used_methods.append(db)
         
         res = enrich_utils.set_enrichments(self.target_genes,
