@@ -21,7 +21,7 @@ pip install .
 
 Python Version Supported/Tested
 -------------------------------
-- Python 3.6
+- Python 3.9
 
 Dependencies
 ------------

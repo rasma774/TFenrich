@@ -1,28 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Dec  3 13:58:20 2020
-
-@author: rasmus
-"""
 
 import setuptools
-import pandas as pd
-import os
 
 __author__ = 'Rasmus Magnusson'
-__COPYRIGHT__ = 'Rasmus Magnusson, 2020, Linköping'
+__COPYRIGHT__ = 'Rasmus Magnusson, 20201, Linköping'
 __contact__ = 'rasma774@gmail.com'
 
-
-# First we assemble the correlation matrix
-picklepath = 'data/buildpickles/'
-pfiles = os.listdir(picklepath)
-dfs = []
-for pickle_file in pfiles:
-    dfs.append(pd.read_pickle(picklepath + pickle_file))
-dfs = pd.concat(dfs).sort_index()
-dfs.to_pickle('data/pickles/correlations.p')
 
 
 with open("README.md", "r") as fh:

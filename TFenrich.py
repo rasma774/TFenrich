@@ -4,16 +4,16 @@ from src import stat_utils
 from src import plot_utils
 from src import parse_utils
 from src import citation_handler
+from src.build_corrmat import check_corrmat
 
 __author__ = 'Rasmus Magnusson'
 __COPYRIGHT__ = 'Copyright (C) 2021 Rasmus Magnusson'
 __contact__ = 'rasma774@gmail.com'
 __LICENSE__ = 'GNU Affero General Public License v3.0'
-__version__ = '0.01'
+__version__ = '0.02'
 __cite__ = ''
 
 
-# TODO: add the DisGenet database to compare with?
 # TODO: put the TFenricher ref into citation when possible
 # TODO: add kwargs to the plot method, the metod takes many inputs...
 
@@ -78,6 +78,9 @@ class TFenricher:
 
 
         if mapmethod == 'corr':
+            # If corr matrix does not exist, build it
+            check_corrmat()
+
             self.mapmethod = map2trgt_utils.correlation_genes
             self.used_methods.append('corrs')
         else:
@@ -215,6 +218,7 @@ class TFenricher:
 
 if __name__ == '__main__':
     args = parse_utils.parse()
+
     # Map TFs to targets
     enr = TFenricher(args.tfs, silent=args.silent, top_n_genes=args.ngenes)
 
