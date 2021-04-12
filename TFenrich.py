@@ -219,14 +219,18 @@ class TFenricher:
 if __name__ == '__main__':
     args = parse_utils.parse()
 
+    # Unpack the TF names
+    with open(args.tfs[0], 'r') as f:
+        TFs = f.read().strip('\n').split(args.sep[0])
+
     # Map TFs to targets
-    enr = TFenricher(args.tfs, silent=args.silent, top_n_genes=args.ngenes)
+    enr = TFenricher(TFs, silent=args.silent, top_n_genes=args.ngenes)
 
     # Calculate the overlaps between putative downstream genes and gene sets
     enr.downstream_enrich(db=args.db, FDR=args.FDR)
 
     if args.plotname != '-1':
-        enr.plot(savename=args.plotname, plot_Ntop=args.plot_n_top[0])
+        enr.plot(savename=args.plotname[0], plot_Ntop=args.plot_n_top)
 
-    enr.enrichments.to_csv(args.results_savename)
+    enr.enrichments.to_csv(args.results_savename[0])
 
