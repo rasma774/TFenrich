@@ -236,7 +236,7 @@ if __name__ == '__main__':
         )
 
     if args.plotname != '-1':
-        enr.plot(savename=args.plotname[0], plot_Ntop=args.plot_n_top)
+        enr.plot(savename=args.plotname[0], plot_Ntop=args.plot_n_top[0])
 
     enr.enrichments.to_csv(args.results_savename[0])
 

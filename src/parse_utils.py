@@ -81,7 +81,7 @@ def parse():
                         help='Set a name to save the plot')
     parser.add_argument('--plot_n_top',
                         type=int,
-                        default=15,
+                        default=[15],
                         nargs=1,
                         help='The maximum number of top enrichment to plot')
 
