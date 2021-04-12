@@ -15,11 +15,11 @@ def check_corrmat():
     if not os.path.isfile('/' + PATH + '/data/pickles/correlations.p'):
         print('building pickle file')
         # Assemble the correlation matrix
-        picklepath = PATH + '/data/buildpickles/'
+        picklepath = '/' + PATH + '/data/buildpickles/'
         pfiles = os.listdir(picklepath)
         dfs = []
         for pickle_file in pfiles:
             dfs.append(pd.read_pickle(picklepath + pickle_file))
         dfs = pd.concat(dfs).sort_index()
-        dfs.to_pickle(PATH + '/data/pickles/correlations.p')
+        dfs.to_pickle('/' + PATH + '/data/pickles/correlations.p')
         print('done')
