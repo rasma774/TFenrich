@@ -42,10 +42,10 @@ def parse():
                         nargs=1,
                         help='Separator of the tf text file. Default is one blank space')
     parser.add_argument('--multiple_test_corr',
-                        default='BH',
+                        default='BenjaminiHochberg',
                         type=str,
                         nargs=1,
-                        help='Multiple testing correction function. Only implemented in the toolbox.')
+                        help='Multiple testing correction function. Either BenjaminiHochberg or Bonferroni. Default is BH. For user-defined multiple testing corrections, please use the TFenricher toolbox.')
 
     parser.add_argument('--db',
                         type=str,

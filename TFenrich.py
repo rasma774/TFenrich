@@ -132,6 +132,8 @@ class TFenricher:
 
         if multiple_testing_correction == 'BenjaminiHochberg': # use this unless otherwise told
             self.multtest_fun = stat_utils.benjaminihochberg_correction
+        elif multiple_testing_correction == 'Bonferroni':
+            self.multtest_fun = stat_utils.bonferroni_correction
         else:
             # Here, we let the user define the testing function
             self.multtest_fun = multiple_testing_correction
@@ -227,7 +229,11 @@ if __name__ == '__main__':
     enr = TFenricher(TFs, silent=args.silent, top_n_genes=args.ngenes)
 
     # Calculate the overlaps between putative downstream genes and gene sets
-    enr.downstream_enrich(db=args.db, FDR=args.FDR)
+    enr.downstream_enrich(
+        db=args.db,
+        FDR=args.FDR,
+        multiple_testing_correction=args.multiple_test_corr
+        )
 
     if args.plotname != '-1':
         enr.plot(savename=args.plotname[0], plot_Ntop=args.plot_n_top)
