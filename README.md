@@ -27,15 +27,15 @@ Dependencies
 ------------
 Except for the standard, built-in Python modules, the following dependencies are needed:
 
-- [NumPy](https://www.numpy.org/)
+- [NumPy > 1.18.5](https://www.numpy.org/)
 
-- [Pandas](https://pandas.pydata.org/)
+- [Pandas > 1.0.5](https://pandas.pydata.org/)
 
-- [Matplotlib](https://matplotlib.org/)
+- [Matplotlib > 3.2.2](https://matplotlib.org/)
 
-- [Scipy](https://www.scipy.org/)
+- [Scipy > 1.5.0](https://www.scipy.org/)
 
-All dependencies are included as per default in a Conda environment, 
+
 
 Usage:
 ======
